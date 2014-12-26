@@ -34,46 +34,55 @@
 
 
 class Quiz
-  attr_accessor(:output_rn, :input_number)
+  attr_accessor(:output_rn, :input_number, :output_number, :sum)
 
-  def initialize
+  def initialize(input_number)
     @rn = {I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000}
-    @input_number = 9
+    @input_number = input_number
     @output_rn = []
+    @output_number = []
   end
 
-  def convert
+  def convert_to_rn
 
     while @input_number > 0
       @rn.each_with_index do |(key, value), index|
-        p 'INSIDE EACH'
-        if (value > @input_number) && (@input_number > 1)
-          p 'INSIDE IF'
-          @output_rn.push(@rn.keys[index-1])
-          @input_number -= (@rn[@rn.keys[index-1]]).to_i
-          p @input_number
-          break
-        elsif value == @input_number
+        if (value == @input_number) 
           @output_rn.push(key)
           @input_number -= value
-          p 'INSIDE ELSIF'
+
+        elsif (value > @input_number) && (@input_number > 1)
+          @output_rn.push(@rn.keys[index-1])
+          @input_number -= (@rn[@rn.keys[index-1]]).to_i
+          break
         end
       end
     end
   end
+
+  def convert_to_arabic(input_rn)
+    input_rn.map do |element|
+      @rn.each do |key, value|
+        if key == element
+          @output_number << value
+        end
+      end
+    end
+    @sum = (@output_number.inject { |result, element| result + element })
+  end
+
+
 end
 
-start = Quiz.new
-start.convert
+start = Quiz.new(777)
+start.convert_to_rn
+start.convert_to_arabic([:D,:C,:C,:L,:X,:X,:V,:I,:I])
 
-p start.output_rn
-p start.input_number
+p start.output_rn.join("")
 
-# h = {:a => "val1", :b => "val2", :c => "val3"}
-# keys = h.keys
-# p keys
-# h[keys[0]] # "val1"
-# h[keys[2]] # "val3"
+p start.sum
+
+
 
 
 
